@@ -5,10 +5,7 @@ import com.example.model.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +23,11 @@ public class RecipeController {
         this.dummy = dummy;
     }
 
+    /*
+     * GET Requests
+     * Require no authentication
+     * Used by any json consumer
+     */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Recipe> getAllRecipes() {
         return dummy.getData();
@@ -46,5 +48,14 @@ public class RecipeController {
     public ResponseEntity<List<Recipe>> getRecipeStartingFrom(@PathVariable int id) {
         List<Recipe> r = dummy.getData().stream().filter(recipe -> recipe.getId() >= id).collect(Collectors.toList());
         return new ResponseEntity<>(r, r.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    /*
+     * POST Request
+     * Resource Creation
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public void addUsed(@RequestBody Recipe recipe) {
+        dummy.getData().add(recipe);
     }
 }
