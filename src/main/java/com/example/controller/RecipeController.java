@@ -55,7 +55,11 @@ public class RecipeController {
      * Resource Creation
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void addUsed(@RequestBody Recipe recipe) {
-        dummy.getData().add(recipe);
+    public ResponseEntity<String> addUsed(@RequestBody Recipe recipe) {
+        if (!dummy.getData().contains(recipe)) {
+            dummy.getData().add(recipe);
+            return new ResponseEntity<String>(HttpStatus.OK);
+        } else return new ResponseEntity<String>(HttpStatus.CONFLICT);
+
     }
 }

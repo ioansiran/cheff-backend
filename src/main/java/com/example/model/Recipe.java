@@ -1,6 +1,7 @@
 package com.example.model;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Created by PC on 4/5/2017.
@@ -94,5 +95,24 @@ public class Recipe {
                 ", weights=" + Arrays.toString(weights) +
                 ", picture='" + picture + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return id == recipe.id &&
+                duration == recipe.duration &&
+                Objects.equals(name, recipe.name) &&
+                Objects.equals(content, recipe.content) &&
+                Arrays.equals(ingredients, recipe.ingredients) &&
+                Arrays.equals(weights, recipe.weights) &&
+                Objects.equals(picture, recipe.picture);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, content, duration, ingredients, weights, picture);
     }
 }
