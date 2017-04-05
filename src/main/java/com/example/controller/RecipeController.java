@@ -15,12 +15,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by PC on 4/5/2017.
+ * Created by Ioan Siran on 4/5/2017.
  */
 @RestController
 public class RecipeController {
+    private final Dummy dummy;
+
     @Autowired
-    private Dummy dummy;
+    public RecipeController(Dummy dummy) {
+        this.dummy = dummy;
+    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Recipe> getAllRecipes() {
@@ -35,12 +39,12 @@ public class RecipeController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
         Optional<Recipe> r = dummy.getData().stream().filter(recipe -> recipe.getId() == id).findFirst();
-        return r.isPresent() ? new ResponseEntity<Recipe>(r.get(), HttpStatus.OK) : new ResponseEntity<Recipe>(new Recipe(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(r.orElseGet(Recipe::new), r.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/from/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Recipe>> getRecipeStartingFrom(@PathVariable int id) {
         List<Recipe> r = dummy.getData().stream().filter(recipe -> recipe.getId() >= id).collect(Collectors.toList());
-        return new ResponseEntity<List<Recipe>>(r, r.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(r, r.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 }
