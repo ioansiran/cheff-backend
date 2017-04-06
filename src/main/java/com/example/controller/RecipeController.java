@@ -23,11 +23,6 @@ public class RecipeController {
         this.dummy = dummy;
     }
 
-    /*
-     * GET Requests
-     * Require no authentication
-     * Used by any json consumer
-     */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Recipe> getAllRecipes() {
         return dummy.getData();
@@ -50,16 +45,25 @@ public class RecipeController {
         return new ResponseEntity<>(r, r.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    /*
-     * POST Request
-     * Resource Creation
-     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addUsed(@RequestBody Recipe recipe) {
+    public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         if (!dummy.getData().contains(recipe)) {
             dummy.getData().add(recipe);
-            return new ResponseEntity<String>(HttpStatus.OK);
-        } else return new ResponseEntity<String>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(recipe, HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(recipe, HttpStatus.CONFLICT);
+    }
 
+    @RequestMapping(value = "/update/", method = RequestMethod.PUT)
+    public ResponseEntity<Recipe> updateRecipe(@RequestBody Recipe recipe) {
+        dummy.getData().removeIf(recipe1 -> recipe1.getId() == recipe.getId());
+        dummy.getData().add(recipe);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteRecipe(@PathVariable int id) {
+        dummy.getData().removeIf((recipe -> recipe.getId() == id));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
