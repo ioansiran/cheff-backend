@@ -1,5 +1,8 @@
 package com.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,8 +15,10 @@ public class Recipe {
     private String name;
     private String content;
     private int duration;
-    private String picture;
+    @JsonManagedReference
+    @JsonProperty("ingredients")
     private List<Ingredient> ingredientsById;
+    private String picture;
 
     @Id
     @Column(name = "id", nullable = false)

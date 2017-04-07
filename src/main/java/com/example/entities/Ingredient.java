@@ -1,18 +1,21 @@
 package com.example.entities;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 /**
  * Created by ioan on 07.04.2017.
  */
 @Entity
 public class Ingredient {
+    @JsonIgnore
     private int id;
     private String name;
     private String quantity;
+    @JsonBackReference
+    private Recipe recipeByRecipeId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -62,5 +65,15 @@ public class Ingredient {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "recipeID", referencedColumnName = "id")
+    public Recipe getRecipeByRecipeId() {
+        return recipeByRecipeId;
+    }
+
+    public void setRecipeByRecipeId(Recipe recipeByRecipeId) {
+        this.recipeByRecipeId = recipeByRecipeId;
     }
 }
